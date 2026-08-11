@@ -7,7 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-DEFAULT_PYTHON = "3.11"
+DEFAULT_PYTHON = "3.12"
 CORE_DEPENDENCIES = [
     "fastapi", "uvicorn", "pandas", "numpy", "scikit-learn",
     "sqlalchemy", "psycopg2-binary", "python-dotenv", "requests",
