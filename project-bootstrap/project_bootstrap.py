@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Project Bootstrapper v3.1
+"""Project Bootstrapper 
 
 Reusable full-stack / ML / AI project scaffolding with optional Python or Go
 API-to-database ingestion services.
