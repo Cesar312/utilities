@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
-"""Project Bootstrapper 
+"""Project Bootstrapper v3.1
+
 Reusable full-stack / ML / AI project scaffolding with optional Python or Go
 API-to-database ingestion services.
 """
-
 from __future__ import annotations
 
 import re
+import platform
 import shutil
 import subprocess
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
-VERSION = "3.1.0"
+VERSION = "3.2.0"
 DEFAULT_PYTHON = "3.12"
 
 BASE_DEPENDENCIES = [
@@ -652,6 +653,31 @@ def initialize_git(project_path: Path, report: BootstrapReport) -> None:
         report.failed("Git", "Repository initialization failed.")
 
 
+
+def open_project_in_new_terminal(project_path: Path) -> bool:
+    """Open macOS Terminal in the project directory without starting services."""
+    if platform.system() != "Darwin":
+        print(
+            "Automatic Terminal opening is only supported by this helper on macOS."
+        )
+        return False
+
+    safe_path = str(project_path).replace("\\", "\\\\").replace('"', '\\"')
+
+    applescript = (
+        'tell application "Terminal"\n'
+        'activate\n'
+        f'do script "cd \\"{safe_path}\\""\n'
+        'end tell'
+    )
+
+    return run_command(
+        ["osascript", "-e", applescript],
+        required=False,
+    )
+
+
+
 def print_next_steps(project_path: Path, include_jupyter: bool, include_mlflow: bool, include_react: bool, include_go: bool) -> None:
     header("Next Steps")
     print(f'cd "{project_path}"')
@@ -771,6 +797,19 @@ def main() -> None:
 
     report.print_report()
     print_next_steps(project_path, include_jupyter, include_mlflow, include_react, include_go)
+
+    header("Bootstrap Complete")
+    print(f"Project bootstrap completed for: {project_path}")
+    print("No development servers were started automatically.")
+
+    if ask_yes_no(
+        "Open the project directory in a new Terminal window?",
+        default=False,
+    ):
+        if open_project_in_new_terminal(project_path):
+            print("Opened a new Terminal window in the project directory.")
+        else:
+            print("Could not open a new Terminal window automatically.")
 
 
 if __name__ == "__main__":
